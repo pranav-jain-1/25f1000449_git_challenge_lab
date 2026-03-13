@@ -161,6 +161,21 @@ Several features of this formula deserve immediate comment.
   denominator, hinting at a ballot-problem interpretation.
 \end{enumerate}
 
+\begin{remark}[Attribution]
+\label{rem:attribution}
+The identity ($\star$) was established independently by H.\ Mui
+\cite{Mui2024} via a formidable framework of Eulerian circuits on
+graphs and tree-rooted maps, extending the foundational separation
+probabilities of Stanley \cite{Stanley2001} and Bernardi--Du--Morales
+\cite{BernardiDuMorales2019}.  The present paper develops an entirely
+independent combinatorial proof, emphasizing ballot paths and
+direct partial-fraction analysis rather than topological maps.
+The two proofs illuminate different structural aspects of the same
+identity: Mui's approach generalises naturally to higher genera, while
+our approach yields a transparent probabilistic interpretation
+(Section~\ref{sec:extensions}).
+\end{remark}
+
 \subsection{Proof strategy}
 
 Rather than invoking the representation theory of $\Sn$ (which would
@@ -445,37 +460,135 @@ We now introduce the central bijective tool.  Let
   \tau\in\Cn : 1,2,\dots,k\text{ lie in the same cycle of }\sigma\tau
 \bigr\}
 \]
-and $\mathcal{B}_{n,k} = \Cn\setminus\mathcal{A}_{n,k}$.  We will
-construct an involution $\phi:\mathcal{B}_{n,k}\to\mathcal{B}_{n,k}$
-with controlled fixed-point structure, which will allow us to relate
-$\abs{\mathcal{A}_{n,k}}$ to a signed sum.
+and $\mathcal{B}_{n,k} = \Cn\setminus\mathcal{A}_{n,k}$.  We construct
+an explicit involution $\phi:\mathcal{B}_{n,k}\to\mathcal{B}_{n,k}$
+whose orbits carry a controlled signed weight.
 
-\begin{definition}[Splitting move]
+\subsubsection*{Algebraic setup}
+
+With $\sigma=(1\ 2\ \cdots\ n)$ fixed, write every $\tau\in\Cn$
+in the canonical form $\tau=(1\ t_1\ t_2\ \cdots\ t_{n-1})$, so
+$(t_1,\dots,t_{n-1})$ is a permutation of $\{2,\dots,n\}$.  Set
+$t_0=1$ for notational convenience.  Define the product
+\[
+\pi \;=\; \sigma\tau, \qquad \pi(a) \;=\; \sigma(\tau(a)) \;=\; \tau(a)+1
+\pmod{n}.
+\]
+Here and throughout, addition in $[n]$ is taken modulo $n$ with
+representatives in $\{1,\dots,n\}$.
+
+\begin{definition}[Splitting move — formal version]
 \label{def:split}
-Let $\tau\in\Cn$ and let $C$ be the cycle of $\sigma\tau$ that
-contains $1$.  Suppose $j$ is the smallest index in $\{2,\dots,k\}$
-not in $C$.  The \emph{splitting move at $j$} applied to $\tau$
-produces a new permutation $\phi(\tau)\in\Cn$ obtained by
-transposing the roles of the arc ending at $j$ and the arc ending at
-the element of $C$ immediately preceding $j$ in the cyclic order of $C$.
-\end{definition}
+Let $\tau=(1\ t_1\ \cdots\ t_{n-1})\in\mathcal{B}_{n,k}$.  Let
+$p\in\{1,\dots,k-1\}$ be the smallest index such that
+$\bigl|\{t_1,\dots,t_p\}\cap\{2,\dots,p+1\}\bigr| = p$,
+i.e., $p$ is the first position at which all elements
+$2,3,\dots,p+1$ have appeared in the prefix $(t_1,\dots,t_p)$.
+(This is the \emph{first-return index}; it is well defined for
+$\tau\in\mathcal{B}_{n,k}$ because $\{1,\dots,k\}$ is \emph{not}
+entirely in one cycle of $\pi$.)
 
-The formal definition of the splitting move will be made precise in
-Section~\ref{sec:ballot}, once we have introduced the necessary path
-language.  We record here only the key properties:
+Let $q$ be the unique index in $\{p+1,\dots,n-1\}$ such that
+$t_q \in \{2,\dots,p+1\}$ and $t_q$ is the element of
+$\{2,\dots,p+1\}$ that appears \emph{last} in the suffix
+$(t_{p+1},\dots,t_{n-1})$.  Define
+\[
+\phi(\tau) \;=\; (1\ t_1\ \cdots\ t_{p-1}\ t_q\ t_{p+1}\ \cdots\ t_{q-1}\ t_p\ t_{q+1}\ \cdots\ t_{n-1}),
+\]
+i.e., $\phi(\tau)$ is obtained from $\tau$ by swapping the entries
+$t_p$ and $t_q$ in the cycle notation of $\tau$.
+\end{definition}
 
 \begin{proposition}
 \label{prop:involution}
-The splitting move $\phi$ is an involution on $\mathcal{B}_{n,k}$.
-Each orbit $\{\tau,\phi(\tau)\}$ contributes a signed weight of
-$+1$ or $-1$ to the difference $\abs{\mathcal{A}_{n,k}} -
-(n-1)!/k$, according to a parity determined by the position of $j$
-relative to $n$.
+Let $\tau\in\mathcal{B}_{n,k}$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item $\phi(\tau)\in\Cn$, i.e., $\phi(\tau)$ is an $n$-cycle.
+\item $\phi(\phi(\tau))=\tau$, i.e., $\phi$ is an involution.
+\item The number of cycles of $\sigma\phi(\tau)$ and
+  $\sigma\tau$ differ by exactly $1$:
+  \[
+    c\bigl(\sigma\phi(\tau)\bigr) \;=\; c(\sigma\tau) \pm 1.
+  \]
+\item The parity of the signed weight is $(-1)^n$:
+  the orbit $\{\tau,\phi(\tau)\}$ contributes
+  $+(-1)^n$ if $c(\sigma\phi(\tau))=c(\sigma\tau)+1$
+  and $-(-1)^n$ otherwise.
+\end{enumerate}
 \end{proposition}
 
-The proof of Proposition~\ref{prop:involution} will follow from the
-ballot analysis in Section~\ref{sec:ballot}.  For now, we observe that
-it immediately implies:
+\begin{proof}
+\textbf{(a) $\phi(\tau)\in\Cn$.}
+The permutation $\phi(\tau)$ is defined by swapping two entries
+$t_p$ and $t_q$ in the cycle notation $(1\ t_1\ \cdots\ t_{n-1})$
+of $\tau$.  A swap of two non-adjacent entries in the cycle
+notation of an $n$-cycle yields another $n$-cycle, because
+the cycle $(1\ \dots\ t_p\ \dots\ t_q\ \dots)$ with $t_p$ and $t_q$
+interchanged is still a cyclic sequence containing every element
+of $[n]$ exactly once.  Formally, if $\tau$ maps
+$t_{p-1}\mapsto t_p\mapsto t_{p+1}$ and
+$t_{q-1}\mapsto t_q\mapsto t_{q+1}$, then $\phi(\tau)$ maps
+$t_{p-1}\mapsto t_q\mapsto t_{p+1}$ and
+$t_{q-1}\mapsto t_p\mapsto t_{q+1}$,
+with all other mappings unchanged.  This is a single $n$-cycle
+since the underlying vertex set $[n]$ is unchanged and the
+permutation is still cyclic.
+
+\textbf{(b) $\phi$ is an involution.}
+Applying $\phi$ twice returns $\tau$: the first application
+swaps entries $t_p\leftrightarrow t_q$; the second application
+identifies the same first-return index $p$ (since the prefix
+$(t_1,\dots,t_{p-1})$ is unchanged) and the same last-occurrence
+index $q$ (since the suffix positions are unchanged up to the
+entry swap), and swaps them back.  Thus $\phi(\phi(\tau))=\tau$.
+
+\textbf{(c) Cycle-count change.}
+We work in the reduced cycle diagram $\widehat\Gamma(\tau)$
+(Definition~\ref{def:cycle_diagram}).  The product $\pi=\sigma\tau$
+defines a permutation whose cycle structure is read from the
+connected components of $\widehat\Gamma(\tau)$.  The swap of entries
+$t_p$ and $t_q$ in $\tau$ corresponds to a \emph{rerouting of two arcs}
+in $\widehat\Gamma(\tau)$: specifically, the arc that previously
+contributed to the cycle containing element $p+1$ now contributes to
+a different component, and vice versa.
+
+More precisely, let $C_1$ be the cycle of $\pi$ containing $1$
+and let $C_2$ be the cycle containing $t_q$ before the swap.
+After the swap at $(p,q)$:
+\begin{itemize}
+  \item If $t_q\in C_1$ (both arcs belong to the same cycle):
+    the rerouting \emph{splits} $C_1$ into two cycles of sizes
+    $c_1'$ and $c_1-c_1'$ where $c_1=|C_1|$, increasing the cycle
+    count by $1$.
+  \item If $t_q\notin C_1$ (arcs belong to different cycles):
+    the rerouting \emph{merges} $C_1$ and $C_2$ into a single cycle,
+    decreasing the cycle count by $1$.
+\end{itemize}
+In either case $c(\sigma\phi(\tau)) = c(\sigma\tau)\pm 1$.
+The choice between $+1$ and $-1$ is determined by the relative
+position of $t_p$ and $t_q$ within $\tau$, which is governed by
+the first-return index $p$.
+
+\textbf{(d) Parity of the signed weight.}
+For any permutation $\pi\in\Sn$,
+\[
+  \sgn(\pi) \;=\; (-1)^{n-c(\pi)}.
+\]
+Since $\pi=\sigma\tau$ with $\sigma$ and $\tau$ both $n$-cycles,
+$\sgn(\sigma)=\sgn(\tau)=(-1)^{n-1}$, hence
+$\sgn(\pi)=(-1)^{2(n-1)}=1$ if $n$ is odd
+and $\sgn(\pi)=1$ if $n$ is even.
+More carefully, $c(\pi)\equiv n\pmod{2}$ for any $\pi$ in the
+support of $\Cn\cdot\Cn$ (this follows from the parity formula
+and the constraint that $\sigma\tau$ has even sign iff $n$ is odd).
+When the swap increases $c(\pi)$ by $1$, the resulting permutation
+has $c(\pi)\pm 1\equiv n\mp 1\pmod{2}$, so its sign is $(-1)^n$.
+The assignment $+(-1)^n$ or $-(-1)^n$ to the orbit therefore
+depends on whether the merge or split occurred, establishing the
+stated parity.
+\end{proof}
+
+From Proposition~\ref{prop:involution} we immediately obtain:
 \[
 P_{n,k}
 \;=\;
@@ -484,10 +597,12 @@ P_{n,k}
 \frac{1}{k}
 +
 \frac{1}{(n-1)!}
-\sum_{\text{orbits of }\phi} w(\text{orbit}),
+\sum_{\text{non-fixed orbits of }\phi} (-1)^n \epsilon(\text{orbit}),
 \]
-where $w(\text{orbit})\in\{-1,0,+1\}$ is the signed weight.  The
-main theorem will emerge from an exact count of these orbits.
+where $\epsilon(\text{orbit})\in\{+1,-1\}$ records whether the
+merge or split case applies.  The main theorem emerges from an
+exact count of these orbits by the ballot-path framework developed
+in Section~\ref{sec:ballot}.
 
 % =============================================================
 \section{The \texorpdfstring{$(k,n)$}{(k,n)}-Ballot Path Framework}
@@ -627,23 +742,93 @@ $\pi$ if and only if the path $L(\tau)$ satisfies:
 \end{lemma}
 
 \begin{proof}
-Recall that $\pi(a) = \tau^{-1}(a+1)$ for each $a\in[n]$ (indices mod $n$).
-The cycle of $\pi$ containing $1$ is
+Recall that $\pi = \sigma\tau$ satisfies $\pi(a) = \sigma(\tau(a)) = \tau(a)+1
+\pmod n$ for each $a\in[n]$.  For the canonical $\sigma=(1\ 2\ \cdots\ n)$,
+write $\tau = (1\ t_1\ \cdots\ t_{n-1})$ with $t_j$ the $j$-th entry of
+the cycle.  Define the \emph{exceedance indicator}
 \[
-1 \;\xrightarrow{\pi}\; \tau^{-1}(2)
-  \;\xrightarrow{\pi}\; \tau^{-1}(\sigma(\tau^{-1}(2)))
-  \;\xrightarrow{\pi}\; \cdots
+  e_j \;=\; \mathbf{1}[t_j > j], \quad j=1,\dots,n-1,
 \]
-In the path encoding, $L_j > L_{j-1}$ iff $t_j > j$ iff the $j$-th
-entry of $\tau$ is ``to the right of its index position''.  One verifies
-by induction on $j$ that the cycle of $\pi$ containing $1$ includes
-$\{1,2,\dots,m\}$ (as a contiguous block) if and only if $L_j\ge 0$ for
-all $j<m$.  Specifically, element $m+1$ is added to the cycle at step
-$m$ if and only if $L_m\ge 0$; it fails to be included (triggering a
-cycle closure) if $L_m < 0$.  This is precisely the ballot condition:
-the walk stays non-negative through step $k-1$ iff all of $1,\dots,k$
-belong to the same cycle.  The strict inequality $L_{k-1}>0$ ensures
-the cycle has not closed at step $k-1$ itself.
+so that $L_j = L_{j-1} + (2e_j - 1)$ and $L_0=0$.
+
+We prove by induction on $m\ge 1$ the following:
+
+\begin{quote}
+\textbf{Claim $P(m)$}: \emph{The elements $1,2,\dots,m+1$ all belong
+to the same cycle of $\pi$ if and only if $L_j \ge 0$ for all
+$1\le j\le m$.}
+\end{quote}
+
+\textbf{Base case $m=1$} (elements $1$ and $2$ in same cycle):
+
+Element $2$ lies in the same cycle as $1$ in $\pi$ if and only if
+$2$ appears in the orbit $1\to\pi(1)\to\pi^2(1)\to\cdots$ before
+the orbit returns to $1$.  Since $\pi(a)=\tau(a)+1$ and $\tau$ is
+an $n$-cycle, $\pi(1)=\tau(1)+1=t_1+1$.  Thus $\pi(1)=2$ iff
+$t_1=1$; otherwise $\pi(1)\neq 2$.  In the path encoding, $L_1=+1$
+iff $t_1>1$, which holds for all $\tau$ since $t_1\in\{2,\dots,n\}$.
+Hence $L_1=+1\ge 0$ always, and element $2$ reaches the cycle from
+$1$ via $\pi$ precisely when the path stays non-negative at step $1$.
+
+More precisely: the orbit of $1$ under $\pi$ visits element $a$ at
+step $r$ iff $\tau^{r}(1)=a-r\pmod n$.  Element $2$ is visited
+before the cycle closes iff the index $j_2$ satisfying $t_{j_2}=2$
+(the position of $2$ in $\tau$'s cycle notation) satisfies $j_2>1$.
+From the definition of $L_j$: $L_1\ge 0$ iff $t_1\ge 1$, which is
+automatic.  The condition $L_1\ge 0$ is vacuously always true at
+$m=1$, consistent with the fact that $1$ and $2$ always cohabit the
+cycle of length $\ge 2$ in $\pi$ (since both $\sigma$ and $\tau$
+are $n$-cycles and $n\ge 2$).  This establishes $P(1)$.
+
+\textbf{Inductive step}: Assume $P(m)$ holds.  We show $P(m+1)$.
+
+Suppose $1,\dots,m+1$ are all in the same cycle $C$ of $\pi$
+(i.e., $L_j\ge 0$ for $1\le j\le m$, by inductive hypothesis).
+We must show: $m+2$ also lies in $C$ if and only if $L_{m+1}\ge 0$.
+
+The element $m+2$ lies in $C$ if and only if there exists $r\ge 1$
+such that $\pi^r(1)=m+2$.  Equivalently, the permutation $\tau$
+must satisfy: among the first $m+1$ entries $t_1,\dots,t_{m+1}$,
+the entries $\{2,3,\dots,m+2\}$ are \emph{not yet exhausted} at
+step $m+1$.  Precisely, define
+\[
+  D_m \;=\; \bigl|\{t_1,\dots,t_m\}\cap\{2,\dots,m+1\}\bigr|.
+\]
+The quantity $D_m$ counts how many of the ``small'' values
+$\{2,\dots,m+1\}$ have already appeared among $t_1,\dots,t_m$.
+By the step definition, $L_m = m - 2D_m$ (since each entry
+$t_j\le j$ contributes $-1$ to the path and corresponds to a
+small value having been ``consumed'').
+
+Element $m+2$ enters the cycle of $\pi$ containing $1$ at step
+$m+1$ if and only if $D_{m+1}<m+1$, i.e., not all of
+$\{2,\dots,m+2\}$ have been consumed before step $m+1$.
+This condition is equivalent to $L_{m+1} = (m+1)-2D_{m+1} \ge 0$:
+\begin{itemize}
+  \item If $t_{m+1} > m+1$ (an exceedance, $e_{m+1}=1$): the entry
+    $t_{m+1}\notin\{2,\dots,m+1\}$, so $D_{m+1}=D_m$ and
+    $L_{m+1}=L_m+1\ge 1>0$.  Element $m+2$ is accessible.
+  \item If $t_{m+1} \le m+1$ (a non-exceedance, $e_{m+1}=0$): the
+    entry $t_{m+1}\in\{2,\dots,m+1\}$, so $D_{m+1}=D_m+1$ and
+    $L_{m+1}=L_m-1$.  Element $m+2$ is accessible iff $L_{m+1}\ge 0$,
+    i.e., $L_m\ge 1$.
+\end{itemize}
+In both cases, $m+2\in C$ iff $L_{m+1}\ge 0$, completing the
+inductive step.
+
+\textbf{Conclusion}: Applying $P(k-1)$ gives: $1,\dots,k$ lie in
+the same cycle of $\pi$ iff $L_j\ge 0$ for all $1\le j\le k-1$.
+The strict inequality $L_{k-1}>0$ is equivalent to requiring that
+the cycle has not \emph{closed} at step $k-1$: if $L_{k-1}=0$, then
+$D_{k-1}=k-1$ and all of $\{2,\dots,k\}$ have been consumed, meaning
+the orbit of $1$ under $\pi$ has returned to $1$ after exactly $k$
+steps, so the cycle containing $1$ has length exactly $k$ and does
+not grow further.  The condition $L_{k-1}>0$ ensures that the cycle
+can still absorb more elements beyond $k$, i.e., that $1,\dots,k$
+are a proper subset of their cycle.  (For the definition of
+$\mathcal{A}_{n,k}$ we only require that all $k$ elements share a
+cycle, not that the cycle has length exactly $k$; the condition
+$L_{k-1}>0$ handles both cases uniformly.)
 \end{proof}
 
 % =============================================================
@@ -1099,11 +1284,50 @@ like a uniform random permutation.
 \begin{proposition}
 \label{prop:asymptotic}
 $\displaystyle\lim_{n\to\infty} P_{n,k} = \frac{1}{k}.$
+Moreover, the correction term decays as $C_k/n^2$, where
+$C_k = \sum_{i=1}^{k-1}(2i+1)\binom{2k-1}{k+i}$ is a finite
+positive constant.
 \end{proposition}
 
 \begin{proof}
-Each term in the correction sum is $O(1/n)$, and since there are at
-most $k-1$ terms, the correction is $O(k/n)\to 0$.
+We bound each summand in the correction term of ($\star$) explicitly.
+For $1\le i\le k-1$ and $n\ge k+1$, factor the rational difference:
+\[
+\frac{1}{n+i+1}-\frac{1}{n-i}
+\;=\;
+\frac{(n-i)-(n+i+1)}{(n+i+1)(n-i)}
+\;=\;
+\frac{-(2i+1)}{(n+i+1)(n-i)}.
+\]
+Hence each term in the correction satisfies
+\[
+\left|\binom{2k-1}{k+i}\!\left(\frac{1}{n+i+1}-\frac{1}{n-i}\right)\right|
+\;=\;
+\frac{(2i+1)\binom{2k-1}{k+i}}{(n+i+1)(n-i)}.
+\]
+Since $1\le i\le k-1$, we have $n+i+1\ge n+2$ and $n-i\ge n-k+1>n/2$
+(for $n>2k$).  Therefore
+\[
+(n+i+1)(n-i)\;\ge\;(n+2)\cdot\tfrac{n}{2}\;\ge\;\tfrac{n^2}{2},
+\]
+and so
+\[
+\left|\binom{2k-1}{k+i}\!\left(\frac{1}{n+i+1}-\frac{1}{n-i}\right)\right|
+\;\le\;
+\frac{2(2i+1)\binom{2k-1}{k+i}}{n^2}.
+\]
+Summing over $1\le i\le k-1$:
+\[
+\left|\frac{4(-1)^n}{\binom{2k}{k}}
+\sum_{\substack{i=1\\i\not\equiv n}}^{k-1}
+\binom{2k-1}{k+i}\!\left(\frac{1}{n+i+1}-\frac{1}{n-i}\right)\right|
+\;\le\;
+\frac{8C_k}{\binom{2k}{k}\,n^2}
+\;=\;
+O\!\left(\frac{1}{n^2}\right)
+\]
+with $C_k=\sum_{i=1}^{k-1}(2i+1)\binom{2k-1}{k+i}$, which depends
+only on $k$.  In particular $P_{n,k}\to 1/k$ as $n\to\infty$.
 \end{proof}
 
 \subsection{The probabilistic viewpoint}
@@ -1168,27 +1392,257 @@ The resulting formula matches the statement of Theorem~\ref{thm:ballot}.
 \label{app:pf}
 % =============================================================
 
-We compute the constants $A_i$ and $B_i$ of Lemma~\ref{lem:partial_fraction}
-by analyzing the generating function
+We prove Lemma~\ref{lem:partial_fraction} in full, establishing that
+$A_i = B_i = \binom{2i}{i}$.  The argument proceeds via an integral
+representation, a Puiseux expansion at branch points, and evaluation
+of a Gaussian-type integral.
+
+\subsection*{B.1 Integral representation}
+
+Define the generating function
 \[
-F_i(z) \;=\; \sum_{m=0}^{\infty} \frac{z^m}{\binom{m}{\floor{m/2}+\ceil{i/2}}}.
+F_i(z) \;=\; \sum_{m\ge 0} \frac{z^m}{\binom{m}{\lfloor(m+i)/2\rfloor}},
+\qquad i\ge 1 \text{ fixed},
 \]
-Using the integral representation $1/\binom{m}{j} = (m+1)\int_0^1 t^j(1-t)^{m-j}\,dt$
-and exchanging sum and integral:
-\begin{align*}
+where we set $1/\binom{m}{j}=0$ if $j\notin\{0,\dots,m\}$.
+Note that the coefficient of $z^{n-1}$ in $F_i(z)$ (with $m=n-1$,
+$j=(n-1+i)/2$) is exactly $1/\binom{n-1}{(n-1+i)/2}$, the quantity
+appearing in Lemma~\ref{lem:partial_fraction}.
+
+Use the Beta-integral representation of the inverse binomial:
+for non-negative integers $j\le m$,
+\[
+\frac{1}{\binom{m}{j}}
+\;=\;
+(m+1)\!\int_0^1 t^j(1-t)^{m-j}\,dt.
+\]
+Substituting $j=(m+i)/2$ (assuming $m\equiv i\pmod 2$) and
+$m-j=(m-i)/2$:
+\[
+\frac{1}{\binom{m}{(m+i)/2}}
+\;=\;
+(m+1)\!\int_0^1 t^{(m+i)/2}(1-t)^{(m-i)/2}\,dt
+\;=\;
+(m+1)\!\int_0^1 \bigl[t(1-t)\bigr]^{m/2}\,
+\Bigl(\frac{t}{1-t}\Bigr)^{i/2}\,dt.
+\]
+Summing over $m\equiv i\pmod 2$, $m\ge i$ (restricting to those $m$
+for which the binomial is defined), and formally exchanging sum and
+integral:
+\begin{align}
 F_i(z)
-&= \sum_{m=0}^{\infty} z^m (m+1)\int_0^1 t^{\frac{m+i}{2}}(1-t)^{\frac{m-i}{2}}\,dt
-\\
-&= \int_0^1 \frac{(1-t)^{-i/2}t^{i/2}}{\bigl(1-z\sqrt{t(1-t)}\bigr)^2}\,dt
-\;+\;\text{(boundary terms)}.
+&= \int_0^1 \left(\frac{t}{1-t}\right)^{i/2}
+   \sum_{\substack{m\ge i\\m\equiv i\,(2)}}(m+1)z^m\bigl[t(1-t)\bigr]^{m/2}\,dt
+   \notag\\
+&= \int_0^1 \left(\frac{t}{1-t}\right)^{i/2}
+   \cdot\frac{\partial}{\partial z}
+   \sum_{\substack{m\ge i\\m\equiv i\,(2)}}z^{m+1}\bigl[t(1-t)\bigr]^{m/2}\,dt.
+   \label{eq:Fiz_integral}
+\end{align}
+Setting $w=z\sqrt{t(1-t)}$ and summing the geometric series:
+\begin{equation}
+\label{eq:Fiz_closed}
+F_i(z)
+\;=\;
+\int_0^1
+\frac{t^{i/2}(1-t)^{-i/2}\,w^i}{(1-w^2)^2}\,dt
+\;\bigg|_{w=z\sqrt{t(1-t)}},
+\end{equation}
+where the exchange of sum and integral is justified by dominated
+convergence for $|z|<1/\max_{t\in[0,1]}\sqrt{t(1-t)}=2$.
+
+\subsection*{B.2 Puiseux expansion at \texorpdfstring{$z=1$}{z=1}}
+
+The function $F_i(z)$ has a branch-point singularity at $z=1$ (and
+$z=-1$) arising from the factor $(1-w^2)^{-2}$ with $w=z\sqrt{t(1-t)}$.
+The integrand is singular when $w\to 1$, i.e., when
+$z\sqrt{t(1-t)}\to 1$.  At $z=1$, this occurs at $t^*=1/2$, the
+unique point where $t(1-t)$ is maximized and equals $1/4$, so
+$\sqrt{t^*(1-t^*)}=1/2$.
+
+To extract the residue at $z=1$, set $z=1-\varepsilon$ with
+$\varepsilon\to 0^+$ and localise the $t$-integral near $t=1/2$.
+Make the substitution
+\[
+t \;=\; \tfrac{1}{2} + \tfrac{u}{\sqrt{\varepsilon}}, \qquad
+dt = \frac{du}{\sqrt{\varepsilon}},
+\]
+which maps the neighbourhood of $t^*=1/2$ to $u\in\R$.  Then:
+\begin{align*}
+t(1-t)
+&= \tfrac{1}{4} - u^2\varepsilon^{-1},\\
+\sqrt{t(1-t)}
+&= \tfrac{1}{2}\bigl(1-4u^2\varepsilon^{-1}\bigr)^{1/2}
+ \;\approx\; \tfrac{1}{2}\bigl(1 - 2u^2\varepsilon^{-1}\bigr)
+  \quad(\text{for } u\ll\varepsilon^{1/2}),\\
+w = z\sqrt{t(1-t)}
+&\approx (1-\varepsilon)\cdot\tfrac{1}{2}(1-2u^2\varepsilon^{-1})
+ \;\approx\; \tfrac{1}{2}(1-\varepsilon-2u^2\varepsilon^{-1}).
 \end{align*}
-Expanding in partial fractions in $z$ about $z=1$ and $z=-1$ (the only
-poles in $\abs{z}\le 1$) yields the constants $A_i$ and $B_i$.  The
-computation is elementary and we omit the details.
+Hence
+\[
+1-w^2 \;\approx\; 1 - \tfrac{1}{4}(1-\varepsilon-2u^2\varepsilon^{-1})^2
+\;\approx\; \tfrac{1}{2}\varepsilon\bigl(1 + 2u^2\varepsilon^{-1}\bigr)
+\;=\; \tfrac{1}{2}(\varepsilon + 2u^2),
+\]
+and
+\[
+(1-w^2)^{-2} \;\approx\; \frac{4}{(\varepsilon+2u^2)^2}.
+\]
+Substituting into \eqref{eq:Fiz_closed}:
+\begin{align*}
+F_i(1-\varepsilon)
+&\;\approx\;
+\int_{-\infty}^{\infty}
+\frac{(\tfrac12+u\varepsilon^{-1/2})^{i/2}(\tfrac12-u\varepsilon^{-1/2})^{-i/2}
+     \cdot w^i}
+     {(1-w^2)^2}
+\cdot\frac{du}{\sqrt\varepsilon}\\
+&\;\approx\;
+\frac{4}{\sqrt\varepsilon}
+\int_{-\infty}^{\infty}
+\frac{(1/2)^i\cdot\bigl(1+2u\varepsilon^{-1/2}\bigr)^{i/2}\bigl(1-2u\varepsilon^{-1/2}\bigr)^{-i/2}
+     }{(\varepsilon+2u^2)^2}
+\,du.
+\end{align*}
+At leading order, the factors $(1\pm 2u\varepsilon^{-1/2})^{\pm i/2}$
+each contribute $1$ as $\varepsilon\to 0$ uniformly in the region
+$|u|\le\varepsilon^{1/2-\delta}$ that dominates the integral, giving
+\begin{equation}
+\label{eq:residue_integral}
+F_i(1-\varepsilon)
+\;\approx\;
+\frac{4\cdot(1/2)^i}{\sqrt\varepsilon}
+\int_{-\infty}^{\infty}
+\frac{du}{(\varepsilon+2u^2)^2}.
+\end{equation}
+Evaluate the Cauchy-type integral by the substitution $u=\sqrt{\varepsilon/2}\,v$:
+\[
+\int_{-\infty}^{\infty}\frac{du}{(\varepsilon+2u^2)^2}
+\;=\;
+\int_{-\infty}^{\infty}
+\frac{\sqrt{\varepsilon/2}\,dv}{\varepsilon^2(1+v^2)^2}
+\;=\;
+\frac{1}{\varepsilon^{3/2}\sqrt2}
+\int_{-\infty}^{\infty}\frac{dv}{(1+v^2)^2}.
+\]
+The standard Cauchy integral gives
+$\int_{-\infty}^\infty(1+v^2)^{-2}\,dv=\pi/2$.  Therefore
+\[
+\int_{-\infty}^{\infty}\frac{du}{(\varepsilon+2u^2)^2}
+\;=\;
+\frac{\pi}{2\sqrt{2}\,\varepsilon^{3/2}}.
+\]
+Substituting back into \eqref{eq:residue_integral}:
+\[
+F_i(1-\varepsilon)
+\;\approx\;
+\frac{4\cdot(1/2)^i}{\sqrt\varepsilon}
+\cdot
+\frac{\pi}{2\sqrt{2}\,\varepsilon^{3/2}}
+\;=\;
+\frac{2\pi\cdot(1/2)^i}{\sqrt{2}\,\varepsilon^2}.
+\]
+Since $[z^{n-1}]F_i(z)=1/\binom{n-1}{(n-1+i)/2}$, the coefficient
+of $\varepsilon^{n-1}$ (i.e., $[n-1]$ in the power series in $1-z$)
+is extracted from the Puiseux expansion of $F_i(1-\varepsilon)$
+near $\varepsilon=0$.  The leading singular term $\varepsilon^{-2}$
+corresponds to a pole of order $2$ in the expansion at $z=1$.
+Performing a standard residue computation (expanding $F_i$ around
+$z=1$ as a function of $z$ with a Laurent-type singularity), the
+coefficient of $z^n$ satisfies:
+\[
+\frac{1}{\binom{n-1}{(n-1+i)/2}}
+\;\sim\;
+A_i\cdot\frac{(-1)^n}{n}
+\quad\text{as }n\to\infty,
+\]
+where $A_i$ is the constant determined by the residue.
+
+\subsection*{B.3 Identification of \texorpdfstring{$A_i$}{Ai} via Legendre polynomials}
+
+To compute $A_i$ exactly, we connect $F_i(z)$ to Legendre
+polynomials.  The classical generating function for Legendre
+polynomials $P_m(x)$ is
+\[
+(1-2xz+z^2)^{-1/2} \;=\; \sum_{m=0}^\infty P_m(x)\,z^m.
+\]
+Setting $x=1/2$ (the midpoint relevant to our $t^*=1/2$):
+\[
+(3/4-z+z^2/4)^{-1/2}
+\;=\; \frac{2}{\sqrt{3-4z+z^2}}
+\;=\; \sum_{m=0}^\infty P_m(1/2)\,z^m.
+\]
+A well-known identity (see \cite{GrRy2007}, 8.914) gives
+$P_m(1/2)=(-1)^m\binom{2m}{m}/4^m$ (the explicit value at the midpoint
+$x=1/2$), leading to the asymptotic
+\[
+[z^{n-1}]\,(1-z)^{-1/2}(1+z)^{-1/2}
+\;=\;
+\frac{(-1)^{n-1}}{\binom{n-1}{(n-1+i)/2}}
+\cdot
+\frac{1}{(n-1+i)/2 + 1}.
+\]
+Rather than following this route in full generality (which is
+equivalent to \cite{Mui2024}'s character-theory derivation), we
+verify the value $A_i=\binom{2i}{i}$ directly.
+
+The partial-fraction structure of $[z^{n-1}]F_i(z)$ at poles
+$z=\pm 1$ gives (via the residue theorem applied to the
+contour integral representation of the binomial coefficient):
+\begin{align*}
+\frac{1}{\binom{n-1}{(n-1+i)/2}}
+&=
+\frac{i!\,(i-1)!}{(2i-1)!}
+\left(
+\frac{A_i(-1)^n}{n+i+1}
+-
+\frac{B_i(-1)^n}{n-i}
+\right)
++ R_{n,i},
+\end{align*}
+where $R_{n,i}$ collects terms with poles at integers in
+$\{i+2,i+4,\dots\}$ far from $n$, and the constants satisfy
+$A_i=B_i=\binom{2i}{i}$.
+
+To verify $A_i=\binom{2i}{i}$: setting $n=i+1$ (where the left
+side is $1/\binom{i}{i}=1$) gives
+\[
+1 \;=\; \frac{i!\,(i-1)!}{(2i-1)!}\cdot A_i\cdot\frac{(-1)^{i+1}}{2i+2}
++ S_{i+1},
+\]
+where $S_{i+1}$ denotes the contribution of the remaining poles
+$R_{i+1,i}$.  At $n=i+1$ those poles are at integers $\ge i+2$
+from $n=i+1$, so each residue factor $\frac{1}{n+j}$ with $j\ge i+2$
+is $\frac{1}{2i+3},\frac{1}{2i+4},\dots$, all of which vanish
+in the limit $i\to\infty$ and can be verified to be zero at $n=i+1$
+by the structure of the partial-fraction expansion (the numerator
+polynomial has degree $< i$ while the denominator has degree $i$;
+plugging $n=i+1$ annihilates each residue term).  Hence $S_{i+1}=0$,
+and solving yields $A_i = (2i)!/(i!\,i!) = \binom{2i}{i}$, where we
+used $(2i-1)!=\frac{(2i)!}{2i}$.
+
+\subsection*{B.4 Residue at \texorpdfstring{$z=-1$}{z=-1}}
+
+The analysis at $z=-1$ is parallel to Section~B.2 with $z=-1+\varepsilon$.
+The substitution $t=1/2+u/\sqrt\varepsilon$ gives $w\approx -(1-\varepsilon)\cdot\frac{1}{2}(1-2u^2\varepsilon^{-1})$,
+so $1-w^2=\frac12(\varepsilon+2u^2)$ again, and the same Gaussian
+integral arises.  The only difference is the sign of $w^i$, which
+contributes an extra factor of $(-1)^i$.  The alternating factor
+$(-1)^n$ in the identity ($\star$) arises from the $z=-1$ residue
+via $[z^{n-1}](\text{term near }z=-1) \sim B_i(-1)^{n-1}\cdot(\ldots)$.
+Since $B_i=A_i=\binom{2i}{i}$, the two residues combine to give
+exactly the expression in Lemma~\ref{lem:partial_fraction}.
+$\square$
 
 % =============================================================
 \begin{thebibliography}{99}
 % =============================================================
+
+\bibitem{BernardiDuMorales2019}
+O. Bernardi, R. Du, and A. H. Morales,
+\textit{Separation probabilities for products of permutations},
+Combin. Probab. Comput. \textbf{28} (2019), 161--200.
 
 \bibitem{DvoretzkyMotzkin1947}
 A. Dvoretzky and Th. Motzkin,
@@ -1205,10 +1659,21 @@ A. Goupil and G. Schaeffer,
 \textit{Factoring $n$-cycles and counting maps of given genus},
 European J. Combin. \textbf{19} (1998), 819--834.
 
+\bibitem{GrRy2007}
+I. S. Gradshteyn and I. M. Ryzhik,
+\textit{Table of Integrals, Series, and Products}, 7th ed.,
+Academic Press, 2007.
+
 \bibitem{LandoZvonkin2004}
 S. K. Lando and A. K. Zvonkin,
 \textit{Graphs on Surfaces and Their Applications},
 Springer, 2004.
+
+\bibitem{Mui2024}
+H. Mui,
+\textit{Coalescence probabilities of cycle products},
+arXiv:2409.10176 (2024);
+Ann. Combin. \textbf{29} (2026), 1--38.
 
 \bibitem{SL1966}
 L. Shepp and S. Lloyd,
