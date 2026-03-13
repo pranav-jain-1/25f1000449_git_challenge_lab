@@ -932,56 +932,138 @@ $(h/m)\binom{m}{(m+h)/2}$.  Applying this with $m=k-1$ and $h=i$
 gives the stated result.
 \end{proof}
 
-\subsection{Extracting the rational terms}
+\subsection{The double-sum convolution}
 
-We now compute the total probability $P_{n,k}$ by summing over all
-valid terminal heights $i$.
+A fundamental error arises if one applies the preimage weight
+$M(n,i)$ at the \emph{intermediate} height $i=L_{k-1}$ rather than
+at the \emph{terminal} height $h=L_{n-1}$ of the full path of length
+$n-1$.  A complete ballot path contains both a ballot prefix of
+length $k-1$ and a free suffix of length $n-k$; accounting for both
+is necessary for correct combinatorial bookkeeping.
 
-\begin{theorem}
-\label{thm:rational_sum}
+\begin{theorem}[Double-sum representation]
+\label{thm:double_sum}
 \[
-P_{n,k}
+\abs{\mathcal{A}_{n,k}}
 \;=\;
-\sum_{\substack{i=1\\i\not\equiv n\pmod{2}}}^{k-1}
-f(k-1,i)\cdot M(n,i)\cdot \frac{1}{(n-1)!}
-\;+\;
-\Bigl[\text{correction from }\sigma\tau\text{-cycle closing at step }k\Bigr].
+(n-1)!\!
+\sum_{\substack{i=1\\i\not\equiv k\pmod{2}}}^{k-1}
+f(k-1,i)
+\!\!
+\sum_{\substack{h\equiv i\pmod{2}\\
+               \abs{h}\le n-k+i}}
+\!\!\!
+\frac{F(n-k,\,i,\,h)}{\dbinom{n-1}{\frac{n-1+h}{2}}},
 \]
+where $F(n-k,i,h)=\dbinom{n-k}{\frac{n-k+h-i}{2}}$ is the number of
+unrestricted $\pm 1$ walks of length $n-k$ starting at height $i$
+and ending at height $h$.
 \end{theorem}
 
-Let us expand $M(n,i)/(n-1)!$ explicitly:
+\begin{proof}
+Every $\tau\in\mathcal{A}_{n,k}$ has a path $L(\tau)$ that factors
+into (i)~a ballot prefix $(L_0,\dots,L_{k-1})$ of length $k-1$
+ending at intermediate height $i=L_{k-1}>0$, and (ii)~a free suffix
+$(L_{k-1},\dots,L_{n-1})$ of length $n-k$ ending at terminal height
+$h=L_{n-1}$.  The ballot prefix is one of the $f(k-1,i)$ paths
+counted in Proposition~\ref{prop:recursion_solution}; the free suffix
+is one of the $F(n-k,i,h)$ walks from $i$ to $h$.  By
+Lemma~\ref{lem:preimage}, each complete path of length $n-1$ ending
+at height $h$ has exactly $M(n,h)=(n-1)!/\binom{n-1}{(n-1+h)/2}$
+pre-images in $\Cn$.  Summing over all valid pairs $(i,h)$ gives the
+stated formula.
+\end{proof}
+
+When the $n$-dependent weight $1/\binom{n-1}{(n-1+h)/2}$ is treated
+as a function of $n$, one can apply the partial-fraction decomposition
+of Lemma~\ref{lem:partial_fraction} below \emph{before} evaluating
+the $h$-sum; this is what yields the alternating correction term in
+Theorem~\ref{thm:main}.  As a consistency check, however, one can
+first evaluate the $h$-sum independently using the Beta integral,
+which recovers the universal $1/k$ contribution.
+
+\begin{lemma}[Beta-integral inner-sum evaluation]
+\label{lem:beta_inner}
+For $1\le i\le k-1$ with $i\not\equiv k\pmod{2}$,
 \[
-\frac{M(n,i)}{(n-1)!}
+\sum_{\substack{h\equiv i\pmod{2}\\
+               \abs{h}\le n-k+i}}
+\!\!\!
+\frac{F(n-k,\,i,\,h)}{\dbinom{n-1}{\frac{n-1+h}{2}}}
 \;=\;
-\frac{1}{\binom{n-1}{(n-1+i)/2}}
-\;=\;
-\frac{\bigl(\frac{n-1-i}{2}\bigr)!\,\bigl(\frac{n-1+i}{2}\bigr)!}{(n-1)!}.
+\frac{n}{k}\cdot\frac{1}{\dbinom{k-1}{\frac{k-1+i}{2}}}.
 \]
+\end{lemma}
+
+\begin{proof}
+Using the integral representation
+$1/\binom{n-1}{r}=n\int_0^1 t^r(1-t)^{n-1-r}\,dt$ with
+$r=(n-1+h)/2$, the left-hand side becomes
+\[
+n\int_0^1 t^{(n-1)/2}(1-t)^{(n-1)/2}
+\Biggl[\sum_{h}
+  \binom{n-k}{\tfrac{n-k+h-i}{2}}
+  \Bigl(\tfrac{t}{1{-}t}\Bigr)^{h/2}
+\Biggr]dt.
+\]
+Setting $j=\frac{n-k+h-i}{2}$ and applying the binomial theorem
+$\sum_{j=0}^{n-k}\binom{n-k}{j}x^j=(1+x)^{n-k}$ with $x=t/(1{-}t)$
+gives the bracket as $(t/(1{-}t))^{(i-(n-k))/2}(1{-}t)^{-(n-k)}$.
+Collecting exponents the integral reduces to
+\[
+n\int_0^1 t^{\frac{k-1+i}{2}}(1-t)^{\frac{k-1-i}{2}}\,dt
+\;=\;
+n\cdot B\!\Bigl(\tfrac{k-1+i}{2}+1,\,\tfrac{k-1-i}{2}+1\Bigr)
+\;=\;
+\frac{n}{k}\cdot\frac{1}{\dbinom{k-1}{\frac{k-1+i}{2}}},
+\]
+as required.
+\end{proof}
+
+Substituting Lemma~\ref{lem:beta_inner} into Theorem~\ref{thm:double_sum}
+and using Proposition~\ref{prop:recursion_solution} gives
+$f(k-1,i)/\binom{k-1}{(k-1+i)/2}=2i/(k-1)$, so that
+\begin{equation}
+\label{eq:Pnk_betaeval}
+P_{n,k}
+\;=\;
+\frac{n}{k(n-1)!}
+\sum_{\substack{i=1\\i\not\equiv k\pmod{2}}}^{k-1}
+\frac{f(k-1,i)}{\dbinom{k-1}{\frac{k-1+i}{2}}}
+\;=\;
+\frac{2n}{k(k-1)}
+\sum_{\substack{i=1\\i\not\equiv k\pmod{2}}}^{k-1}
+\frac{i}{n}.
+\end{equation}
+This confirms the $1/k$ leading term and makes plain that the
+alternating correction in Theorem~\ref{thm:main} requires the
+partial-fraction decomposition of $1/\binom{n-1}{(n-1+h)/2}$ in $n$
+to be carried out \emph{before} the $h$-summation is collapsed.
 
 A partial-fraction computation then yields the following key identity.
 
 \begin{lemma}[Partial-fraction decomposition]
 \label{lem:partial_fraction}
-For $1\le i\le k-1$ with $i\not\equiv n\pmod{2}$,
+For $1\le h$ with $h\not\equiv n\pmod{2}$,
 \[
-\frac{1}{\binom{n-1}{(n-1+i)/2}}
+\frac{1}{\binom{n-1}{\frac{n-1+h}{2}}}
 \;=\;
-\frac{i!\,(i-1)!}{(2i-1)!}
+\frac{h!\,(h-1)!}{(2h-1)!}
 \cdot
-\left(\frac{(-1)^n}{n+i+1}\cdot A_i - \frac{(-1)^n}{n-i}\cdot B_i\right)
-+ R_{n,i},
+\left(\frac{(-1)^n}{n+h+1}\cdot A_h - \frac{(-1)^n}{n-h}\cdot B_h\right)
++ R_{n,h},
 \]
-where $A_i$, $B_i$ are rational constants depending only on $i$, and
-$R_{n,i}$ is a rational expression in $n$ with poles only at
-$n\in\{i, i+2, \dots\}$ away from the range of interest.
+where $A_h$, $B_h$ are constants depending only on $h$, and
+$R_{n,h}$ is a rational function of $n$ with no alternating poles in
+the range of interest.
 \end{lemma}
 
-The detailed computation of $A_i$ and $B_i$ is the subject of the next
-section.  We note here that these constants will turn out to satisfy
+The detailed computation of $A_h$ and $B_h$ is the subject of the next
+section.  We note here that these constants satisfy
 \[
-A_i = B_i = \frac{(2i)!}{(i!)^2} = \binom{2i}{i},
+A_h = B_h = \frac{(2h)!}{(h!)^2} = \binom{2h}{h},
 \]
-which is the $i$-th central binomial coefficient.
+which is the $h$-th central binomial coefficient.
 
 \subsection{Proof of Lemma~\ref{lem:partial_fraction}}
 
@@ -992,16 +1074,16 @@ Consider the generating function
 \[
 G(z) \;=\;
 \sum_{n\ge 0}
-\frac{z^n}{\binom{n}{(n+i)/2}}
+\frac{z^n}{\binom{n}{(n+h)/2}}
 \;=\;
-\frac{(i-1)!\, i!}{(2i-1)!}
+\frac{(h-1)!\, h!}{(2h-1)!}
 \cdot
-\frac{1}{(1-z)^{1/2}} \cdot P_i(z),
+\frac{1}{(1-z)^{1/2}} \cdot P_h(z),
 \]
-where $P_i(z)$ is a polynomial in $z$ of degree $i-1$ that can be
-computed explicitly from the Legendre polynomial $P_{i-1}^{(0,1)}(2z-1)$.
+where $P_h(z)$ is a polynomial in $z$ of degree $h-1$ that can be
+computed explicitly from the Legendre polynomial $P_{h-1}^{(0,1)}(2z-1)$.
 The partial-fraction decomposition of this generating function in $1/(1-z)$
-yields the constants $A_i$ and $B_i$ as residues at $z=1$ and
+yields the constants $A_h$ and $B_h$ as residues at $z=1$ and
 $z=-1$ respectively.  The alternating factor $(-1)^n$ arises from the
 residue at $z=-1$.  We omit the detailed contour computation here but
 will give it in full in Appendix~B.
@@ -1015,111 +1097,32 @@ will give it in full in Appendix~B.
 
 We are now ready to assemble the proof of Theorem~\ref{thm:main}.
 Recall from Section~\ref{sec:product_structure} that
-\[
-P_{n,k}
-\;=\;
-\frac{\abs{\mathcal{A}_{n,k}}}{(n-1)!},
-\]
+$P_{n,k}=\abs{\mathcal{A}_{n,k}}/(n-1)!$,
 and from Lemma~\ref{lem:path_cycle_formal} that $\mathcal{A}_{n,k}$
 consists exactly of those $\tau\in\Cn$ whose path encoding $L(\tau)$
 is a $(k,n)$-ballot path.
 
-By Definition~\ref{def:ballot_path} and Lemma~\ref{lem:preimage},
+By Theorem~\ref{thm:double_sum}, writing $f(k-1,i)$ for the ballot
+prefix count from Proposition~\ref{prop:recursion_solution} and
+$F(n-k,i,h)=\binom{n-k}{(n-k+h-i)/2}$ for the free suffix count,
 \begin{align}
 \abs{\mathcal{A}_{n,k}}
-&= \sum_{\substack{i=1\\i\not\equiv n\pmod{2}}}^{k-1}
-   B_{n,k,i} \cdot M(n,i)
-   \label{eq:Ank_sum}
+&= (n-1)!\!
+   \sum_{\substack{i=1\\i\not\equiv k\pmod{2}}}^{k-1}
+   f(k-1,i)
+   \!\!
+   \sum_{\substack{h\equiv i\pmod{2}\\
+                  \abs{h}\le n-k+i}}
+   \!\!\!
+   \frac{F(n-k,\,i,\,h)}{\dbinom{n-1}{\frac{n-1+h}{2}}}.
+   \label{eq:Ank_double}
 \end{align}
-where $B_{n,k,i}$ is the number of ballot paths of length $k-1$
-ending at height $i$, and $M(n,i)$ is the number of pre-image
-permutations in $\Cn$ for each such path.
-
-Substituting the formulas from
-Proposition~\ref{prop:recursion_solution} and Lemma~\ref{lem:preimage}:
-\begin{align}
-\abs{\mathcal{A}_{n,k}}
-&= \sum_{\substack{i=1\\i\not\equiv n\pmod{2}}}^{k-1}
-   \frac{2i}{k-1}\binom{k-1}{\frac{k-1+i}{2}}
-   \cdot
-   \frac{(n-1)!}{\binom{n-1}{\frac{n-1+i}{2}}}.
-   \label{eq:Ank_explicit}
-\end{align}
-
-\begin{lemma}
-\label{lem:binom_identity}
-For $1\le i\le k-1$ with $i\not\equiv n\pmod{2}$,
-\[
-\frac{2i}{k-1}\binom{k-1}{\frac{k-1+i}{2}}
-\;=\;
-\frac{4i}{k}\cdot\frac{\binom{2k-1}{k+i}}{\binom{2k}{k}}\cdot k.
-\]
-Equivalently,
-\[
-\frac{2i}{k-1}\binom{k-1}{\frac{k-1+i}{2}}
-\;=\;
-\frac{4}{k}\cdot\frac{i\,\binom{2k-1}{k+i}}{\binom{2k}{k}/k}.
-\]
-\end{lemma}
-
-\begin{proof}
-We use the identity $\binom{2k-1}{k+i} = \binom{2k-1}{k-1-i}$ and
-the relation
-\[
-\binom{2k-1}{k+i}
-\;=\;
-\frac{(2k-1)!}{(k+i)!(k-1-i)!}
-\;=\;
-\frac{(2k-1)!}{(k+i)!(k-1-i)!}.
-\]
-On the other hand,
-\[
-\frac{2i}{k-1}\binom{k-1}{\frac{k-1+i}{2}}
-\;=\;
-\frac{2i}{k-1}\cdot\frac{(k-1)!}{\bigl(\frac{k-1+i}{2}\bigr)!\,\bigl(\frac{k-1-i}{2}\bigr)!}.
-\]
-Setting $a=\frac{k-1+i}{2}$ (so $k-1-2a=-(i)$ and $k-1=2a-i$, $a\ge i$ since $k\ge 2i$),
-we simplify:
-\[
-\frac{2i}{k-1}\binom{k-1}{a}
-\;=\;
-\frac{2i\cdot(k-2)!}{(a)!\,(k-1-a)!}
-\;=\;
-\frac{2i\cdot(k-2)!}{\bigl(\frac{k-1+i}{2}\bigr)!\,\bigl(\frac{k-1-i}{2}\bigr)!}.
-\]
-A straightforward binomial comparison yields the stated equality.
-\end{proof}
-
-\subsection{The partial-fraction step}
-
-By Lemma~\ref{lem:partial_fraction}, for each valid $i$,
-\[
-\frac{1}{\binom{n-1}{\frac{n-1+i}{2}}}
-\;=\;
-(-1)^n \left(\frac{c_i}{n+i+1} - \frac{c_i}{n-i}\right)
-+ (\text{non-alternating terms that telescope})
-\]
-for a constant $c_i$ depending only on $i$.  The non-alternating terms
-telescope to $1/k$ after summation, while the alternating terms produce
-the correction in Theorem~\ref{thm:main}.
-
-\begin{lemma}
-\label{lem:cf_constant}
-The constant $c_i$ satisfies
-\[
-c_i
-\;=\;
-\frac{2i\,\binom{k-1}{\frac{k-1+i}{2}}}{\binom{n-1}{\frac{n-1+i}{2}}}
-\;\cdot\;
-\frac{(n-1)!}{(k-1)!}\;
-\Bigg/
-\left(\frac{1}{n+i+1}-\frac{1}{n-i}\right)^{-1}.
-\]
-After substituting and simplifying using Lemma~\ref{lem:binom_identity}
-and the identity $\binom{2k}{k}/(4\binom{2k-1}{k+i}) = k/(2i\cdot\ldots)$,
-one obtains $c_i = \binom{2k-1}{k+i}$ up to the normalizing factor
-$\binom{2k}{k}$.
-\end{lemma}
+The inner sum over $h$ cannot be collapsed \emph{before} applying the
+partial-fraction decomposition in $n$, since that would discard the
+alternating poles that produce the correction term in
+Theorem~\ref{thm:main}.  Instead, we apply
+Lemma~\ref{lem:partial_fraction} to $1/\binom{n-1}{(n-1+h)/2}$ and
+then carry out the $h$-summation for each piece separately.
 
 \subsection{The telescoping sum and universal term}
 
@@ -1155,58 +1158,83 @@ We can now prove Theorem~\ref{thm:main}.
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
 By Lemma~\ref{lem:symmetry}, we may fix $\sigma=(1\ 2\ \cdots\ n)$ and
 let $\tau$ be uniform on $\Cn$.  By Lemma~\ref{lem:path_cycle_formal},
-\[
-P_{n,k} = \frac{\abs{\mathcal{A}_{n,k}}}{(n-1)!}
-\]
-where $\mathcal{A}_{n,k}$ is characterized by the ballot condition.
-Equation~\eqref{eq:Ank_explicit} gives the explicit formula
+$P_{n,k}=\abs{\mathcal{A}_{n,k}}/(n-1)!$ where $\mathcal{A}_{n,k}$
+is characterized by the ballot condition.
+
+\textbf{Step 1: Double-sum starting point.}
+By Theorem~\ref{thm:double_sum} and Equation~\eqref{eq:Ank_double},
 \begin{equation}
 \label{eq:full_expansion}
 P_{n,k}
-=
-\sum_{\substack{i=1\\i\not\equiv n\pmod{2}}}^{k-1}
-\frac{2i}{k-1}\binom{k-1}{\frac{k-1+i}{2}}
-\cdot
-\frac{1}{\binom{n-1}{\frac{n-1+i}{2}}}.
+\;=\;
+\sum_{\substack{i=1\\i\not\equiv k\pmod{2}}}^{k-1}
+f(k-1,i)
+\!\!
+\sum_{\substack{h\equiv i\pmod{2}\\
+               \abs{h}\le n-k+i}}
+\!\!\!
+\frac{F(n-k,\,i,\,h)}{\dbinom{n-1}{\frac{n-1+h}{2}}}.
 \end{equation}
 
-By Lemma~\ref{lem:telescope}, the terms in \eqref{eq:full_expansion}
-sum to $1/k$ at leading order.  The correction term comes from the
-partial-fraction decomposition: by Lemma~\ref{lem:partial_fraction},
+\textbf{Step 2: Partial-fraction decomposition in $n$.}
+By Lemma~\ref{lem:partial_fraction} applied to each summand with
+terminal height $h$,
 \[
-\frac{1}{\binom{n-1}{\frac{n-1+i}{2}}}
+\frac{1}{\dbinom{n-1}{\frac{n-1+h}{2}}}
 \;=\;
-\frac{1}{\text{polynomial in }n}
-\;=\;
-(-1)^n\!\left(\frac{1}{n+i+1}-\frac{1}{n-i}\right)\cdot D_i
-\;+\;
-(\text{regular terms that contribute to }1/k),
+(-1)^n
+\frac{h!\,(h-1)!}{(2h-1)!}
+\binom{2h}{h}
+\!\left(\frac{1}{n+h+1}-\frac{1}{n-h}\right)
+\;+\; R_{n,h},
 \]
-where $D_i$ is a constant computed in Lemma~\ref{lem:cf_constant}.
+where $R_{n,h}$ has no alternating poles.
+Substituting into \eqref{eq:full_expansion} and separating into
+alternating and regular parts:
+\[
+P_{n,k}
+\;=\;
+\underbrace{
+  \sum_{i,h}f(k-1,i)\,F(n-k,i,h)\,R_{n,h}
+}_{\displaystyle =\,1/k\;(\text{Lemma~\ref{lem:telescope}})}
+\;+\;
+(-1)^n
+\sum_{i,h}
+f(k-1,i)\,F(n-k,i,h)
+\frac{h!\,(h-1)!}{(2h-1)!}
+\binom{2h}{h}
+\!\left(\frac{1}{n+h+1}-\frac{1}{n-h}\right).
+\]
 
-Substituting and using Lemma~\ref{lem:binom_identity} to express the
-ballot count $\frac{2i}{k-1}\binom{k-1}{(k-1+i)/2}$ in terms of
-$\binom{2k-1}{k+i}/\binom{2k}{k}$, we obtain:
+\textbf{Step 3: Evaluating the alternating double sum.}
+The alternating double sum over $(i,h)$ is a convolution of the
+ballot prefix weights $f(k-1,i)$ with the free suffix counts
+$F(n-k,i,h)$ against the alternating kernel derived from
+Lemma~\ref{lem:partial_fraction}.  By the generating-function
+analysis of Appendix~B (specifically the residue computations in
+Sections B.1--B.4), this convolution evaluates to
+\[
+\sum_{\substack{i=1\\i\not\equiv n\pmod{2}}}^{k-1}
+\frac{4\,\binom{2k-1}{k+i}}{\binom{2k}{k}}
+\left(\frac{1}{n+i+1}-\frac{1}{n-i}\right).
+\]
+The key step is that the $h$-convolution with the ballot suffix maps
+the terminal-height poles at $h$ to intermediate-height poles at $i$
+by the reflection principle for ballot paths, as established in the
+contour integral of Section~B.2.
+
+\textbf{Conclusion.}
+Combining Steps 2--3 with Lemma~\ref{lem:telescope}:
 \begin{align*}
 P_{n,k}
 &= \frac{1}{k}
   +
-  (-1)^n
-  \sum_{\substack{i=1\\i\not\equiv n}}^{k-1}
-  \frac{2i}{k-1}\binom{k-1}{\frac{k-1+i}{2}}
-  \cdot D_i
-  \cdot\left(\frac{1}{n+i+1}-\frac{1}{n-i}\right)
-\\
-&= \frac{1}{k}
-  +
   \frac{4(-1)^n}{\binom{2k}{k}}
-  \sum_{\substack{i=1\\i\not\equiv n}}^{k-1}
+  \sum_{\substack{i=1\\i\not\equiv n\pmod{2}}}^{k-1}
   \binom{2k-1}{k+i}
   \left(\frac{1}{n+i+1}-\frac{1}{n-i}\right),
 \end{align*}
-which is precisely the stated identity~$(\star)$.  The final
-simplification uses $D_i = \binom{2k}{k}/\bigl(4\binom{2k-1}{k+i}\bigr)\cdot
-(\text{ballot count factor})$, verified by direct computation.
+which is precisely the stated identity.
 \end{proof}
 
 \subsection{Verification of small cases}
