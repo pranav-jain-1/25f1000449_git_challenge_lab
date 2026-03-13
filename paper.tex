@@ -171,8 +171,11 @@ probabilities of Stanley \cite{Stanley2001} and Bernardi--Du--Morales
 independent combinatorial proof, emphasizing ballot paths and
 direct partial-fraction analysis rather than topological maps.
 The two proofs illuminate different structural aspects of the same
-identity: Mui's approach generalises naturally to higher genera, while
-our approach yields a transparent probabilistic interpretation
+identity: Mui's approach generalises naturally to higher topological
+genera via the Hurwitz genus expansion, while our generating-function
+approach analytically resolves the genus-zero coalescence case
+directly---without invoking the genus expansion---and yields a
+transparent probabilistic interpretation
 (Section~\ref{sec:extensions}).
 \end{remark}
 
@@ -1249,18 +1252,188 @@ The above examples provide a reassuring sanity check on the formula.
 \label{sec:extensions}
 % =============================================================
 
-\subsection{Generalization to arbitrary conjugacy classes}
+\subsection{Generalization to mixed products}
 
-The proof strategy developed here — path encoding, ballot counting, and
-partial-fraction extraction — is not special to $n$-cycles.  One can
-ask: for two permutations $\sigma,\tau$ chosen uniformly from a fixed
-conjugacy class $\mathcal{C}_\lambda\subset\Sn$, what is the probability
-that $k$ specified elements lie in the same cycle of $\sigma\tau$?
+The cycle-diagram approach of Section~\ref{sec:product_structure} is not
+confined to products of two $n$-cycles.  In this section we execute the
+method for the simplest non-trivial \emph{mixed} case: one factor is a
+uniform $n$-cycle and the other is a uniform transposition.  The result
+is a complete closed-form theorem obtained by a one-paragraph argument
+using the same splitting-move analysis as in Section~\ref{sec:product_structure}.
 
-The answer will depend on the cycle type $\lambda$ through the Hurwitz
-formula (Proposition~\ref{prop:hurwitz}), but we expect that for many
-natural cycle types the same combination of ballot paths and
-partial fractions yields a closed-form expression analogous to $(\star)$.
+\subsubsection*{Setup}
+
+Fix $n\ge 2$.  Let $\sigma$ be chosen uniformly from $\Cn$ and let $\tau$
+be chosen uniformly and independently from the set
+\[
+T_n \;=\; \bigl\{\,(a\;b) : 1\le a < b \le n\,\bigr\}
+\]
+of all $\binom{n}{2}$ transpositions in $\Sn$.  Define the
+\emph{mixed coalescence probability}
+\[
+Q_{n,k} \;=\; \Prob\!\bigl(1,2,\dots,k \text{ lie in the same cycle of }
+\sigma\tau\bigr).
+\]
+
+\begin{theorem}
+\label{thm:transposition}
+For all integers $n\ge 2$ and $1\le k\le n$,
+\[
+Q_{n,k}
+\;=\;
+\frac{(n-k+1)(n-k)}{n(n-1)}.
+\tag{$\star\!\star$}
+\]
+\end{theorem}
+
+\begin{proof}
+By the same uniformity argument as in the proof of
+Theorem~\ref{thm:main} (Section~\ref{sec:main_proof}), we may fix
+$\sigma = (1\;2\;\cdots\;n)$ without loss of generality.
+
+For a transposition $\tau=(a\;b)$ with $a < b$, the product
+$\sigma\cdot(a\;b)$ acts on the reduced cycle diagram as
+a \emph{single} application of the splitting move of
+Definition~\ref{def:split}: the one $n$-cycle is split into exactly
+two cycles.  Tracing the cycle structure explicitly:
+
+\begin{align*}
+(\sigma\tau)(x) &= \sigma(\tau(x)) =
+\begin{cases}
+b+1 & \text{if } x = a,\\
+a+1 & \text{if } x = b,\\
+x+1 \pmod{n} & \text{otherwise}.
+\end{cases}
+\end{align*}
+
+Starting from $a$ and iterating $\sigma\tau$, one verifies by a direct
+trace that the orbit of $a$ is
+\[
+C_1 \;=\; \bigl(a,\; b+1,\; b+2,\;\dots,\; n,\; 1,\; 2,\;\dots,\; a-1\bigr),
+\]
+a cycle of length $n-(b-a)$, while the orbit of $b$ is
+\[
+C_2 \;=\; \bigl(b,\; a+1,\; a+2,\;\dots,\; b-1\bigr),
+\]
+a cycle of length $b-a$.  These two cycles partition $[n]$.
+
+\medskip
+\noindent\textbf{Which elements lie in $C_1$?}  An element $j\in[n]$ lies
+in $C_2$ if and only if $j\in\{b,a+1,a+2,\dots,b-1\} = \{a+1,\dots,b\}$.
+Equivalently, $j\in C_1$ if and only if $j\le a$ or $j > b$.
+
+Since $a\ge 1$, the element $1$ satisfies $1\le a$, so
+$1\in C_1$ for \emph{every} transposition $(a\;b)$.
+
+For elements $2,\dots,k$ (with $k\le n$): element $j$ lies in $C_1$
+iff $j\le a$ or $j>b$.  For all of $\{1,2,\dots,k\}$ to lie in $C_1$
+simultaneously, we need every $j\in\{2,\dots,k\}$ to satisfy $j\le a$,
+i.e.\ we need $k\le a$.
+
+\medskip
+\noindent\textbf{Counting favourable transpositions.}  The event
+$\{1,\dots,k\subseteq C_1\}$ occurs if and only if $a\ge k$.  The
+number of transpositions $(a\;b)$ with $k\le a < b \le n$ is
+\[
+\binom{n-k+1}{2} \;=\; \frac{(n-k+1)(n-k)}{2}.
+\]
+Dividing by the total number of transpositions $\binom{n}{2}=n(n-1)/2$:
+\[
+Q_{n,k} \;=\; \frac{(n-k+1)(n-k)/2}{n(n-1)/2}
+\;=\; \frac{(n-k+1)(n-k)}{n(n-1)}.  \qquad\square
+\]
+\end{proof}
+
+\subsubsection*{Verification and properties of $(\star\!\star)$}
+
+\begin{example}[$n=4$, $k=2$]
+The formula gives $Q_{4,2}=(3)(2)/(4\cdot 3)=6/12=1/2$.
+Direct enumeration of the six transpositions confirms: $\sigma\cdot(1\;2)$,
+$\sigma\cdot(1\;3)$, $\sigma\cdot(1\;4)$ place $1$ and $2$ in different
+cycles, while $\sigma\cdot(2\;3)$, $\sigma\cdot(2\;4)$, $\sigma\cdot(3\;4)$
+place them in the same cycle, giving $Q_{4,2}=3/6=1/2$.\ $\checkmark$
+\end{example}
+
+\begin{example}[$n=5$, $k=3$]
+The formula gives $Q_{5,3}=(3)(2)/(5\cdot 4)=6/20=3/10$.
+Among the $\binom{5}{2}=10$ transpositions, only those $(a\;b)$
+with $a\ge 3$ can place $\{1,2,3\}$ in a common cycle.  These are
+$(3\;4)$ and $(3\;5)$, giving 2 favourable cases; but by the formula
+there are $\binom{3}{2}=3$ favourable transpositions.  Recount: $a\ge 3$
+and $b>a$: $(3,4),(3,5),(4,5)$ — three pairs. $\checkmark$
+\end{example}
+
+\subsubsection*{Comparison with the two-$n$-cycle formula}
+
+The following table contrasts the exact values of $P_{n,k}$ (from
+Theorem~\ref{thm:main}) and $Q_{n,k}$ (from Theorem~\ref{thm:transposition})
+for small parameters.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c|c|c|c}
+$(n,k)$ & $P_{n,k}$ (two $n$-cycles) & $Q_{n,k}$ ($n$-cycle and transposition) & $1/k$ (baseline) \\\hline
+$(4,2)$ & $7/18\approx 0.389$ & $1/2 = 0.500$ & $0.500$ \\
+$(5,2)$ & $1/2 = 0.500$ & $3/5 = 0.600$ & $0.500$ \\
+$(6,2)$ & $9/20 = 0.450$ & $2/3\approx 0.667$ & $0.500$ \\
+$(5,3)$ & $3/8 = 0.375$ & $3/10 = 0.300$ & $0.333$ \\
+$(6,3)$ & $31/120\approx 0.258$ & $2/5 = 0.400$ & $0.333$ \\
+\end{tabular}
+\end{center}
+
+\subsubsection*{Asymptotic comparison}
+
+For fixed $k$ as $n\to\infty$:
+\[
+Q_{n,k} \;=\; \frac{(n-k+1)(n-k)}{n(n-1)} \;\longrightarrow\; 1,
+\]
+while $P_{n,k}\to 1/k$ (Proposition~\ref{prop:asymptotic}).  The
+divergence of the limits reflects the different ``mixing power'' of the
+two conjugacy classes: multiplying the $n$-cycle by a transposition
+makes only a minimal local rearrangement (splitting it into two long
+cycles), so elements $1,\dots,k$ remain in the same cycle unless the
+split point falls between them.  Multiplying by a second $n$-cycle, by
+contrast, induces a global rearrangement that asymptotically approaches
+a uniform random permutation (hence $P_{n,k}\to 1/k$).
+
+More precisely, the correction term in $(\star\!\star)$ satisfies
+\[
+Q_{n,k} - 1 \;=\; -\frac{(k-1)(2n-k)}{n(n-1)} \;=\; O\!\left(\frac{k}{n}\right)
+\]
+as $n\to\infty$, decaying one power of $n$ slower than the
+$O(1/n^2)$ correction in $(\star)$ (Proposition~\ref{prop:asymptotic}).
+
+\subsubsection*{Ballot path interpretation}
+
+The proof above uses the cycle-splitting structure of the reduced cycle
+diagram, the same geometric ingredient as the ballot path argument in
+Section~\ref{sec:ballot}.  One can recast $(\star\!\star)$ in ballot
+language: for $\tau=(a\;b)$, define the \emph{transposition ballot
+indicator} $\mathbf{1}[a\ge k]$.  The event $\{1,\dots,k\subseteq C_1\}$
+is precisely the event that the transposition does not ``cut'' the
+contiguous block $\{1,\dots,k\}$ of the $n$-cycle, i.e.\ that the
+lower endpoint $a$ lies above the threshold $k$.  This is a
+degenerate single-step ballot condition: instead of a walk of $n-1$
+steps staying non-negative (as in Section~\ref{sec:ballot}), we have a
+single indicator $\mathbf{1}[a\ge k]$ drawn from the discrete
+uniform distribution on $\{1,\dots,n-1\}$.  This perspective
+connects $(\star\!\star)$ directly to the ballot framework and
+suggests a unified treatment of mixed products via weighted ballot
+paths.
+
+\subsubsection*{Open problem for general conjugacy classes}
+
+For $\tau$ drawn uniformly from a conjugacy class $\mathcal{C}_\lambda$
+with cycle type $\lambda\vdash n$, the probability $R_{n,k,\lambda}$
+that $1,\dots,k$ lie in the same cycle of $\sigma\tau$ (with $\sigma$
+a uniform $n$-cycle) depends on $\lambda$ through a generalised
+splitting analysis.  For $\lambda=(n)$ (n-cycles) we obtain $P_{n,k}$,
+and for $\lambda=(2,1^{n-2})$ (transpositions) we obtain $Q_{n,k}$.
+We conjecture that for every $\lambda$ the same combination of ballot
+paths and partial fractions yields a closed-form expression analogous
+to $(\star)$, with the role of the ballot coefficients $\binom{2k-1}{k+i}$
+replaced by class-dependent ballot numbers determined by the
+Hurwitz formula (Proposition~\ref{prop:hurwitz}).
 
 \subsection{Asymptotic analysis}
 
